@@ -1,0 +1,5 @@
+name: astrbot_plugin_tool_router
+desc: 动态工具路由插件 - 基于语义匹配，每次只注入与当前对话最相关的工具
+author: AstrBot
+version: 1.0.0
+repo: https://github.com/AstrBot/astrbot

@@ -1,0 +1,17 @@
+{
+    "enable": {
+        "description": "启用动态工具路由插件",
+        "type": "bool",
+        "default": true
+    },
+    "top_k": {
+        "description": "每次保留的最多工具数量（越小越省 token）",
+        "type": "int",
+        "default": 10
+    },
+    "min_similarity": {
+        "description": "最小语义相似度阈值 (0-1)，越高过滤越严格",
+        "type": "float",
+        "default": 0.3
+    }
+}
