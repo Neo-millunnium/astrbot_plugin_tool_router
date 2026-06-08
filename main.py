@@ -9,8 +9,8 @@ from astrbot.api.provider import ProviderRequest
 from astrbot.core.agent.tool import FunctionTool, ToolSet
 from astrbot.core.star import Context, Star
 
-# 无论如何都会保留的基础工具（白名单）
-ESSENTIAL_TOOLS = {
+# 默认白名单（仅当配置中未设置时使用）
+DEFAULT_ESSENTIAL_TOOLS = {
     "astrbot_execute_shell",
     "astrbot_execute_python",
     "astrbot_file_read_tool",
@@ -31,6 +31,15 @@ class ToolRouterPlugin(Star):
         self._cfg = config
         self._embedding_provider = None
         self._initialized = False
+
+    def _get_whitelist(self) -> set[str]:
+        """从配置读取白名单，若配置为空则返回默认白名单"""
+        if not self._cfg:
+            return DEFAULT_ESSENTIAL_TOOLS
+        tools = self._cfg.get("whitelist_tools", None)
+        if tools and isinstance(tools, list) and len(tools) > 0:
+            return set(tools)
+        return DEFAULT_ESSENTIAL_TOOLS
 
     async def _ensure_initialized(self):
         if self._initialized:
@@ -151,13 +160,16 @@ class ToolRouterPlugin(Star):
         if len(all_tools) <= top_k:
             return
 
+        # 从配置读取白名单
+        essential_tools = self._get_whitelist()
+
         # 分离基础工具和普通工具
         essential = []
         others = []
         for tool in all_tools:
             if not tool.active:
                 continue
-            if tool.name in ESSENTIAL_TOOLS:
+            if tool.name in essential_tools:
                 essential.append(tool)
             else:
                 others.append(tool)

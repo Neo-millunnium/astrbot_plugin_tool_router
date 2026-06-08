@@ -15,15 +15,33 @@
         "default": 0.3
     },
     "embedding_provider_id": {
-        "description": "使用的 Embedding Provider ID（留空则自动选择第一个可用的）。在 AstrBot 后台 → 提供商设置中可查看每个 Embedding 提供商的 ID",
+        "description": "使用的 Embedding Provider ID（留空则自动选择第一个可用的）",
         "type": "string",
         "default": "",
         "hint": "例如: openai_embedding_main, ollama_embedding, siliconflow_embedding"
     },
     "embedding_model_name": {
-        "description": "覆盖 Embedding Provider 的模型名称（留空则使用提供商默认模型）。部分提供商支持更换模型，此处可手动指定",
+        "description": "覆盖 Embedding Provider 的模型名称（留空则使用提供商默认模型）",
         "type": "string",
         "default": "",
         "hint": "例如: text-embedding-3-small, bge-large-zh-v1.5, BAAI/bge-m3"
+    },
+    "whitelist_tools": {
+        "description": "白名单工具列表，这些工具不会被路由过滤，始终保留给 Agent 使用。可在此增删工具名称",
+        "type": "list",
+        "default": [
+            "astrbot_execute_shell",
+            "astrbot_execute_python",
+            "astrbot_file_read_tool",
+            "astrbot_file_write_tool",
+            "astrbot_file_edit_tool",
+            "astrbot_grep_tool",
+            "send_message_to_user",
+            "future_task_tool",
+            "astrbot_web_search",
+            "astrbot_fetch_webpage"
+        ],
+        "item_type": "string",
+        "hint": "每行一个工具名称，例如：astrbot_execute_shell"
     }
 }
