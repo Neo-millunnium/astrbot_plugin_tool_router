@@ -13,5 +13,17 @@
         "description": "最小语义相似度阈值 (0-1)，越高过滤越严格",
         "type": "float",
         "default": 0.3
+    },
+    "embedding_provider_id": {
+        "description": "使用的 Embedding Provider ID（留空则自动选择第一个可用的）。在 AstrBot 后台 → 提供商设置中可查看每个 Embedding 提供商的 ID",
+        "type": "string",
+        "default": "",
+        "hint": "例如: openai_embedding_main, ollama_embedding, siliconflow_embedding"
+    },
+    "embedding_model_name": {
+        "description": "覆盖 Embedding Provider 的模型名称（留空则使用提供商默认模型）。部分提供商支持更换模型，此处可手动指定",
+        "type": "string",
+        "default": "",
+        "hint": "例如: text-embedding-3-small, bge-large-zh-v1.5, BAAI/bge-m3"
     }
 }

@@ -38,8 +38,38 @@ class ToolRouterPlugin(Star):
         try:
             providers = self._context.get_all_embedding_providers()
             if providers:
-                self._embedding_provider = providers[0]
-                logger.info("工具路由插件: 已加载 Embedding Provider")
+                # 根据 embedding_provider_id 配置选择指定的 provider
+                configured_id = self._cfg.get("embedding_provider_id", "") if self._cfg else ""
+
+                if configured_id:
+                    # 按 id 查找匹配的 provider
+                    matched = [p for p in providers if getattr(p, 'provider_config', {}).get("id", "") == configured_id]
+                    if matched:
+                        self._embedding_provider = matched[0]
+                        logger.info(f"工具路由插件: 已选择 Embedding Provider [{configured_id}]")
+                    else:
+                        # 未匹配到指定 id，回退到第一个并给出警告
+                        available_ids = [p.provider_config.get("id", "unknown") for p in providers]
+                        logger.warning(
+                            f"工具路由插件: 未找到配置的 Embedding Provider ID [{configured_id}]，"
+                            f"当前可用的 provider id: {available_ids}，将使用第一个可用 provider"
+                        )
+                        self._embedding_provider = providers[0]
+                else:
+                    # 未配置 provider_id，使用第一个
+                    self._embedding_provider = providers[0]
+                    logger.info("工具路由插件: 已加载第一个可用的 Embedding Provider")
+
+                # 如果配置了 model_name，覆盖 provider 的模型
+                configured_model = self._cfg.get("embedding_model_name", "") if self._cfg else ""
+                if configured_model and self._embedding_provider:
+                    current_model = self._embedding_provider.get_model()
+                    if current_model != configured_model:
+                        self._embedding_provider.set_model(configured_model)
+                        logger.info(
+                            f"工具路由插件: 已覆盖 Embedding 模型 "
+                            f"[{current_model or '默认'} -> {configured_model}]"
+                        )
             else:
                 logger.warning("工具路由插件: 未找到 Embedding Provider，使用关键词匹配")
             self._initialized = True
