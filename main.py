@@ -92,7 +92,7 @@ class ToolRouterPlugin(Star):
         return self._cfg.get("min_similarity", 0.3) if self._cfg else 0.3
 
     def _is_enabled(self) -> bool:
-        return self._cfg.get("enable", True) if self._cfg else True
+        return True  # 由前端插件开关控制
 
     def _extract_query(self, event: AstrMessageEvent, req: ProviderRequest) -> str:
         query = req.prompt or event.message_str or ""

@@ -1,9 +1,4 @@
 {
-    "enable": {
-        "description": "启用动态工具路由插件",
-        "type": "bool",
-        "default": true
-    },
     "top_k": {
         "description": "每次保留的最多工具数量（越小越省 token）",
         "type": "int",
